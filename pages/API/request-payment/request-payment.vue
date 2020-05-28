@@ -77,19 +77,22 @@
                     success: (e) => {
                         console.log("login success", e);
                         uni.request({
-                            url: `https://unidemo.dcloud.net.cn/payment/wx/mp?code=${e.code}&amount=${this.price}`,
+                            url: `https://uni.dinsmooth.com/api/xcx/payInit?itemId=1`,
+                            header: {
+                                    'Authorization': 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMGE0NDE2MS1kY2NjLTQyM2ItYTE5Yy1lYTU5YTI0YWU4MmYiLCJ1c2VyVHlwZSI6MiwicHJvdklkIjoiMTQwMDAwIiwicHJvdk5hbWUiOiLlsbHopb8iLCJyb2xlSWRzIjpbXSwicGVybWlzc2lvbnMiOltdLCJpYXQiOjE1OTA2MzgyNDcsImlzcyI6Im1ham9yIiwibmJmIjoxNTkwNjM4MjQ3LCJleHAiOjE1OTEyNDMwNDd9.jn96fBY-nNDLGEcEm108qL7jZF1m8euLHhduCU8w0aI' //自定义请求头信息
+                            },
                             success: (res) => {
                                 console.log("pay request success", res);
                                 if (res.statusCode !== 200) {
                                     uni.showModal({
-                                        content: "支付失败，请重试！",
+                                        content: '支付失败，请重试！',
                                         showCancel: false
                                     });
                                     return;
                                 }
-                                if (res.data.ret === 0) {
-                                    console.log("得到接口prepay_id", res.data.payment);
-                                    let paymentData = res.data.payment;
+                                if (res.data.success) {
+                                    console.log("得到接口prepay_id", res.data.data);
+                                    let paymentData = res.data.data;
                                     uni.requestPayment({
                                         timeStamp: paymentData.timeStamp,
                                         nonceStr: paymentData.nonceStr,
@@ -114,7 +117,7 @@
                                     })
                                 } else {
                                     uni.showModal({
-                                        content: res.data.desc,
+                                        content: res.data.message,
                                         showCancel: false
                                     })
                                 }

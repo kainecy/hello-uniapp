@@ -101,6 +101,23 @@
                     // #endif
                     success: (res) => {
                         console.log('login success:', res);
+                        // #ifdef MP-WEIXIN
+                            console.log(res.code);
+                            uni.request({
+                                url: 'https://uni.dinsmooth.com/xcx/login', //仅为示例，并非真实接口地址。
+                                data: {
+                                    code: res.code
+                                },
+                                header: {
+                                    'custom-header': 'hello' //自定义请求头信息
+                                },
+                                success: (res) => {
+                                    console.log(res.data);
+                                    this.text = 'request success';
+                                }
+                            });
+                            
+                        // #endif
                         // 更新保存在 store 中的登录状态
                         this.login(provider.id);
                     },
